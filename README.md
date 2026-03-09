@@ -21,12 +21,12 @@
 主程序位于：
 
 ```bash
-apps/doc-viewer/
+apps/openClaw-admin/
 ```
 
 详细部署与运维说明见：
 
-- [apps/doc-viewer/README.md](./apps/doc-viewer/README.md)
+- [apps/openClaw-admin/README.md](./apps/openClaw-admin/README.md)
 
 ## 线上运行信息
 
@@ -39,7 +39,7 @@ apps/doc-viewer/
 ## 快速启动
 
 ```bash
-cd apps/doc-viewer
+cd apps/openClaw-admin
 npm install
 npm run dev
 ```
@@ -47,7 +47,7 @@ npm run dev
 ## 生产启动
 
 ```bash
-cp apps/doc-viewer/doc-viewer.service /etc/systemd/system/lobster-admin.service
+cp apps/openClaw-admin/doc-viewer.service /etc/systemd/system/lobster-admin.service
 systemctl daemon-reload
 systemctl enable lobster-admin
 systemctl restart lobster-admin

@@ -4,12 +4,12 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/root/.openclaw/workspace-djy-build/apps/doc-viewer
+WorkingDirectory=/root/.openclaw/workspace-djy-build/apps/openClaw-admin
 Environment=PORT=3001
 Environment=DOC_ROOT=/root/.openclaw
 Environment=DOCS_PASSWORD=DJYdocs!20260309
 Environment=SITE_NAME=龙虾管理后台
-ExecStart=/root/.nvm/versions/node/v22.22.0/bin/node /root/.openclaw/workspace-djy-build/apps/doc-viewer/server.js
+ExecStart=/root/.nvm/versions/node/v22.22.0/bin/node /root/.openclaw/workspace-djy-build/apps/openClaw-admin/server.js
 Restart=always
 RestartSec=3
 User=root

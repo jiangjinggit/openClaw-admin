@@ -28,7 +28,7 @@
 ## 本地开发
 
 ```bash
-cd apps/doc-viewer
+cd apps/openClaw-admin
 npm install
 npm run dev
 ```
@@ -63,7 +63,7 @@ node server.js
 ### 1. 安装依赖
 
 ```bash
-cd /root/.openclaw/workspace-djy-build/apps/doc-viewer
+cd /root/.openclaw/workspace-djy-build/apps/openClaw-admin
 npm install
 ```
 
@@ -72,13 +72,13 @@ npm install
 项目已提供服务文件：
 
 ```bash
-apps/doc-viewer/doc-viewer.service
+apps/openClaw-admin/doc-viewer.service
 ```
 
 复制到系统目录：
 
 ```bash
-cp apps/doc-viewer/doc-viewer.service /etc/systemd/system/lobster-admin.service
+cp apps/openClaw-admin/doc-viewer.service /etc/systemd/system/lobster-admin.service
 systemctl daemon-reload
 systemctl enable lobster-admin
 systemctl restart lobster-admin
