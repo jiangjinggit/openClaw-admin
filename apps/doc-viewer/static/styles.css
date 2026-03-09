@@ -1,0 +1,44 @@
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background: #0b1020; color: #e5e7eb; }
+a { color: #7dd3fc; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.app-shell { display: grid; grid-template-columns: 320px 1fr; min-height: 100vh; }
+.sidebar { background: #111827; border-right: 1px solid #1f2937; padding: 16px; overflow: auto; }
+.brand { font-size: 20px; font-weight: 800; margin-bottom: 16px; }
+.search { display: flex; gap: 8px; margin-bottom: 12px; }
+.search input, .login-card input { flex: 1; padding: 10px 12px; border: 1px solid #374151; border-radius: 10px; background: #0f172a; color: #e5e7eb; }
+.search button, .login-card button { padding: 10px 14px; border: 0; border-radius: 10px; background: #2563eb; color: white; cursor: pointer; }
+.meta { font-size: 12px; line-height: 1.6; color: #9ca3af; margin-bottom: 12px; }
+.tree ul { list-style: none; padding-left: 16px; margin: 6px 0; }
+.tree li { margin: 4px 0; }
+.tree details > summary { cursor: pointer; color: #cbd5e1; padding: 4px 6px; border-radius: 8px; }
+.tree details > summary:hover { background: #1e293b; }
+.tree .file a { display: flex; align-items: center; gap: 8px; padding: 6px 8px; border-radius: 8px; color: #e5e7eb; }
+.tree .file.active a, .tree .file a:hover { background: #1e293b; }
+.file-icon { width: 18px; text-align: center; }
+.content { background: #0b1020; overflow: auto; }
+.toolbar { position: sticky; top: 0; background: rgba(11,16,32,0.88); backdrop-filter: blur(8px); border-bottom: 1px solid #1f2937; padding: 14px 22px; z-index: 10; }
+.path { color: #93c5fd; font-size: 14px; }
+.doc-body { max-width: 1080px; margin: 0 auto; padding: 24px; line-height: 1.8; }
+.doc-body h1, .doc-body h2, .doc-body h3 { color: white; line-height: 1.25; }
+.doc-body pre { overflow: auto; border-radius: 12px; padding: 14px; background: #111827; }
+.doc-body code { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.doc-body :not(pre) > code { background: #1f2937; padding: 2px 6px; border-radius: 6px; }
+.doc-body blockquote { border-left: 4px solid #374151; margin: 0; padding-left: 16px; color: #cbd5e1; }
+.doc-body table { border-collapse: collapse; width: 100%; margin: 16px 0; }
+.doc-body th, .doc-body td { border: 1px solid #374151; padding: 8px 10px; text-align: left; }
+.doc-body img { max-width: 100%; }
+.doc-panel { background: #111827; border: 1px solid #1f2937; border-radius: 16px; padding: 18px; margin-bottom: 18px; }
+.panel-title { font-size: 13px; color: #93c5fd; margin-bottom: 14px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.source-toggle { background: #0f172a; border: 1px solid #1f2937; border-radius: 16px; padding: 14px 16px; }
+.source-toggle summary { cursor: pointer; font-weight: 700; color: #e5e7eb; }
+.source-toggle[open] summary { margin-bottom: 12px; }
+.raw-view { margin: 0; }
+.empty { color: #6b7280; padding: 10px 0; }
+.search-results { list-style: none; padding: 0; }
+.search-results li { border: 1px solid #1f2937; border-radius: 12px; padding: 14px; margin-bottom: 12px; background: #111827; }
+.search-results p { color: #cbd5e1; margin-bottom: 0; }
+.login-page { min-height: 100vh; display: grid; place-items: center; }
+.login-card { width: min(420px, calc(100vw - 32px)); background: #111827; border: 1px solid #1f2937; border-radius: 18px; padding: 24px; display: grid; gap: 12px; }
+.login-card h1 { margin: 0; }
+@media (max-width: 900px) { .app-shell { grid-template-columns: 1fr; } .sidebar { max-height: 40vh; } }

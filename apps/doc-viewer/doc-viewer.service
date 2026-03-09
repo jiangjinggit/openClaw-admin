@@ -1,0 +1,18 @@
+[Unit]
+Description=Lobster Admin Doc Viewer
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/root/.openclaw/workspace-djy-build/apps/doc-viewer
+Environment=PORT=3001
+Environment=DOC_ROOT=/root/.openclaw
+Environment=DOCS_PASSWORD=DJYdocs!20260309
+Environment=SITE_NAME=龙虾管理后台
+ExecStart=/root/.nvm/versions/node/v22.22.0/bin/node /root/.openclaw/workspace-djy-build/apps/doc-viewer/server.js
+Restart=always
+RestartSec=3
+User=root
+
+[Install]
+WantedBy=multi-user.target
