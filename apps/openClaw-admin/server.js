@@ -13,7 +13,14 @@ const SITE_NAME = process.env.SITE_NAME || '龙虾管理后台';
 const SESSION_COOKIE = 'doc_viewer_session';
 const SESSION_TOKEN = crypto.createHash('sha256').update(PASSWORD).digest('hex');
 const IGNORE_DIRS = new Set(['node_modules', '.git', '.next', 'dist', 'build', '.turbo', '.cache']);
-const SUPPORTED_EXTS = new Set(['.md', '.txt', '.json', '.yaml', '.yml']);
+const SUPPORTED_EXTS = new Set([
+  '.md', '.txt', '.json', '.yaml', '.yml',
+  '.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs',
+  '.css', '.scss', '.less', '.html', '.htm',
+  '.py', '.go', '.java', '.sh', '.bash', '.zsh',
+  '.sql', '.toml', '.ini', '.conf', '.env',
+  '.xml', '.csv', '.log', '.dockerfile'
+]);
 
 const md = new MarkdownIt({
   html: false,
@@ -69,6 +76,8 @@ function safeResolve(rel = '') {
 }
 
 function getExt(file) {
+  const base = path.basename(file).toLowerCase();
+  if (base === 'dockerfile') return '.dockerfile';
   return path.extname(file).toLowerCase();
 }
 
@@ -76,17 +85,42 @@ function shouldIncludeFile(name) {
   return SUPPORTED_EXTS.has(getExt(name));
 }
 
-function isMarkdown(file) {
-  return getExt(file) === '.md';
-}
-
 function detectLang(file) {
   const ext = getExt(file);
-  if (ext === '.json') return 'json';
-  if (ext === '.yaml' || ext === '.yml') return 'yaml';
-  if (ext === '.txt') return 'plaintext';
-  if (ext === '.md') return 'markdown';
-  return 'plaintext';
+  switch (ext) {
+    case '.json': return 'json';
+    case '.yaml':
+    case '.yml': return 'yaml';
+    case '.txt':
+    case '.log': return 'plaintext';
+    case '.md': return 'markdown';
+    case '.js':
+    case '.mjs':
+    case '.cjs': return 'javascript';
+    case '.jsx': return 'jsx';
+    case '.ts': return 'typescript';
+    case '.tsx': return 'tsx';
+    case '.css': return 'css';
+    case '.scss': return 'scss';
+    case '.less': return 'less';
+    case '.html':
+    case '.htm':
+    case '.xml': return 'xml';
+    case '.py': return 'python';
+    case '.go': return 'go';
+    case '.java': return 'java';
+    case '.sh':
+    case '.bash':
+    case '.zsh': return 'bash';
+    case '.sql': return 'sql';
+    case '.toml': return 'ini';
+    case '.ini':
+    case '.conf':
+    case '.env': return 'ini';
+    case '.csv': return 'plaintext';
+    case '.dockerfile': return 'dockerfile';
+    default: return 'plaintext';
+  }
 }
 
 async function walkDocs(dir, base = '') {
@@ -124,10 +158,34 @@ function hasCurrentDescendant(item, currentPath) {
 function iconForExt(ext) {
   switch (ext) {
     case '.md': return '📝';
-    case '.txt': return '📄';
-    case '.json': return '🧩';
+    case '.txt':
+    case '.log': return '📄';
+    case '.json':
     case '.yaml':
-    case '.yml': return '⚙️';
+    case '.yml':
+    case '.toml':
+    case '.ini':
+    case '.conf':
+    case '.env': return '⚙️';
+    case '.js':
+    case '.jsx':
+    case '.ts':
+    case '.tsx':
+    case '.mjs':
+    case '.cjs':
+    case '.py':
+    case '.go':
+    case '.java':
+    case '.sh':
+    case '.bash':
+    case '.zsh':
+    case '.sql': return '💻';
+    case '.css':
+    case '.scss':
+    case '.less':
+    case '.html':
+    case '.htm':
+    case '.xml': return '🌐';
     default: return '📄';
   }
 }
@@ -148,7 +206,7 @@ async function searchDocs(query) {
   const files = flattenFiles(tree);
   const q = query.toLowerCase();
   const results = [];
-  for (const rel of files.slice(0, 6000)) {
+  for (const rel of files.slice(0, 8000)) {
     try {
       const abs = safeResolve(rel);
       const text = await fsp.readFile(abs, 'utf8');
@@ -161,7 +219,7 @@ async function searchDocs(query) {
           : rel;
         results.push({ path: rel, ext: getExt(rel), snippet });
       }
-      if (results.length >= 50) break;
+      if (results.length >= 80) break;
     } catch (_) {}
   }
   return results;
@@ -196,7 +254,7 @@ function renderDocContent(file, raw) {
   }
   return `
     <section class="doc-panel rendered-panel">
-      <div class="panel-title">原始文件内容</div>
+      <div class="panel-title">源码 / 原始文件内容</div>
       ${renderRawBlock(raw, file)}
     </section>
   `;
@@ -222,10 +280,10 @@ function layout({ title, body, search = '', currentPath = '', treeHtml = '' }) {
       </form>
       <div class="meta">
         <div><strong>根目录：</strong>${escapeHtml(ROOT_DIR)}</div>
-        <div><strong>类型：</strong>md / txt / json / yaml / yml</div>
+        <div><strong>类型：</strong>md / txt / json / yaml / js / ts / py / go / java / sh / sql / css / html / toml / ini / conf / env ...</div>
         <div><a href="/logout">退出</a></div>
       </div>
-      <nav class="tree">${treeHtml || '<div class="empty">未发现可展示文档</div>'}</nav>
+      <nav class="tree">${treeHtml || '<div class="empty">未发现可展示文件</div>'}</nav>
     </aside>
     <main class="content">
       <div class="toolbar">
@@ -240,7 +298,7 @@ function layout({ title, body, search = '', currentPath = '', treeHtml = '' }) {
 
 app.get('/login', (req, res) => {
   if (isAuthed(req)) return res.redirect('/');
-  res.send(`<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>登录 - ${escapeHtml(SITE_NAME)}</title><link rel="stylesheet" href="/static/styles.css" /></head><body class="login-page"><form class="login-card" method="POST" action="/login"><h1>${escapeHtml(SITE_NAME)}</h1><p>云端只读文档入口，支持 Markdown 渲染与源码查看。</p><input type="password" name="password" placeholder="输入访问密码" autofocus /><button type="submit">进入后台</button></form></body></html>`);
+  res.send(`<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>登录 - ${escapeHtml(SITE_NAME)}</title><link rel="stylesheet" href="/static/styles.css" /></head><body class="login-page"><form class="login-card" method="POST" action="/login"><h1>${escapeHtml(SITE_NAME)}</h1><p>云端只读文档入口，支持 Markdown、代码和配置文件查看。</p><input type="password" name="password" placeholder="输入访问密码" autofocus /><button type="submit">进入后台</button></form></body></html>`);
 });
 
 app.post('/login', (req, res) => {
@@ -292,7 +350,8 @@ app.get('/', async (req, res) => {
         <ul>
           <li>Markdown 渲染预览</li>
           <li>原生 Markdown 源码折叠查看</li>
-          <li>TXT / JSON / YAML / YML 原文查看</li>
+          <li>常见代码文件查看与语法高亮</li>
+          <li>常见配置文件查看</li>
           <li>文件名与正文搜索</li>
         </ul>
       `;
