@@ -258,8 +258,13 @@ function renderDocContent(file, raw) {
       .replace(/"/g, '&quot;');
     return `
       <section class="doc-panel rendered-panel">
-        <div class="panel-title">HTML 渲染预览</div>
-        <iframe class="html-preview" sandbox="allow-same-origin" srcdoc="${srcDoc}"></iframe>
+        <div class="panel-title">HTML 手机预览</div>
+        <div class="phone-preview-shell">
+          <div class="phone-preview-frame">
+            <div class="phone-preview-bar"></div>
+            <iframe class="html-preview" sandbox="allow-same-origin" srcdoc="${srcDoc}"></iframe>
+          </div>
+        </div>
       </section>
       <details class="source-toggle">
         <summary>查看 HTML 源码</summary>
