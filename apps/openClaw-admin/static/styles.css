@@ -34,6 +34,7 @@ a:hover { text-decoration: underline; }
 .source-toggle summary { cursor: pointer; font-weight: 700; color: #e5e7eb; }
 .source-toggle[open] summary { margin-bottom: 12px; }
 .raw-view { margin: 0; }
+.html-preview { width: 100%; min-height: 70vh; border: 1px solid #374151; border-radius: 12px; background: white; }
 .empty { color: #6b7280; padding: 10px 0; }
 .search-results { list-style: none; padding: 0; }
 .search-results li { border: 1px solid #1f2937; border-radius: 12px; padding: 14px; margin-bottom: 12px; background: #111827; }

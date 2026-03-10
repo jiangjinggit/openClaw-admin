@@ -252,6 +252,21 @@ function renderDocContent(file, raw) {
       </details>
     `;
   }
+  if (ext === '.html' || ext === '.htm') {
+    const srcDoc = raw
+      .replace(/&/g, '&amp;')
+      .replace(/"/g, '&quot;');
+    return `
+      <section class="doc-panel rendered-panel">
+        <div class="panel-title">HTML 渲染预览</div>
+        <iframe class="html-preview" sandbox="allow-same-origin" srcdoc="${srcDoc}"></iframe>
+      </section>
+      <details class="source-toggle">
+        <summary>查看 HTML 源码</summary>
+        ${renderRawBlock(raw, file)}
+      </details>
+    `;
+  }
   return `
     <section class="doc-panel rendered-panel">
       <div class="panel-title">源码 / 原始文件内容</div>
