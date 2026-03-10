@@ -258,10 +258,16 @@ function renderDocContent(file, raw) {
       .replace(/"/g, '&quot;');
     return `
       <section class="doc-panel rendered-panel">
-        <div class="panel-title">HTML 手机预览</div>
+        <div class="panel-title">HTML 公众号预览</div>
+        <div class="preview-toolbar">
+          <button type="button" class="preview-size-btn" data-width="375">375</button>
+          <button type="button" class="preview-size-btn" data-width="430">430</button>
+          <button type="button" class="preview-size-btn active" data-width="560">560</button>
+          <button type="button" class="preview-size-btn" data-width="720">720</button>
+          <button type="button" class="preview-size-btn" data-width="100">全宽</button>
+        </div>
         <div class="phone-preview-shell">
-          <div class="phone-preview-frame">
-            <div class="phone-preview-bar"></div>
+          <div class="phone-preview-frame wechat-preview-frame" id="wechat-preview-frame">
             <iframe class="html-preview" sandbox="allow-same-origin" srcdoc="${srcDoc}"></iframe>
           </div>
         </div>
@@ -270,6 +276,23 @@ function renderDocContent(file, raw) {
         <summary>查看 HTML 源码</summary>
         ${renderRawBlock(raw, file)}
       </details>
+      <script>
+        (function () {
+          const frame = document.getElementById('wechat-preview-frame');
+          const buttons = Array.from(document.querySelectorAll('.preview-size-btn'));
+          const key = 'lobster_html_preview_width';
+          const applyWidth = (value) => {
+            const width = value === '100' ? '100%' : value + 'px';
+            frame.style.width = width;
+            buttons.forEach(btn => btn.classList.toggle('active', btn.dataset.width === value));
+            try { localStorage.setItem(key, value); } catch (_) {}
+          };
+          let saved = '560';
+          try { saved = localStorage.getItem(key) || '560'; } catch (_) {}
+          applyWidth(saved);
+          buttons.forEach(btn => btn.addEventListener('click', () => applyWidth(btn.dataset.width)));
+        })();
+      </script>
     `;
   }
   return `
